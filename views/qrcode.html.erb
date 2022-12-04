@@ -1,0 +1,24 @@
+<div class="card-group">
+<% %w[PERSONAL_USAGE_ALLOWED PERSONAL_USAGE_DISALLOWED].each do |allow_personal_usage_value| %>
+<div class="card">
+  <img src="<%=
+  payload = {
+    'policyName' => @policy_name,
+    'allowPersonalUsage' => allow_personal_usage_value,
+  }
+  enrollment_token = AndroidManagementApi.call("POST /enterprises/#{current_enterprise.name}/enrollmentTokens", payload: payload)
+  chart_uri = URI('https://chart.googleapis.com/chart')
+  chart_uri.query = URI.encode_www_form({
+    cht: 'qr',
+    chs: '500x500',
+    chl: enrollment_token['qrCode'],
+  })
+  chart_uri
+  %>" class="card-img-top"/>
+  <div class="card-body">
+    <h5 class="card-title"><%= allow_personal_usage_value %>のQRコード</h5>
+    <p class="card-text">ポリシーは<%= @policy_name.split("/").last %></p>
+  </div>
+</div>
+<% end %>
+</div>

@@ -1,0 +1,12 @@
+<h1>Select enterprise</h1>
+<% if @enterprises.empty? %>
+管理対象Enterpriseはありません
+<% else %>
+<div class="list-group">
+<% @enterprises.each do |enterprise| %>
+  <a href="/enterprises/<%= enterprise.name %>" class="list-group-item list-group-item-action">
+    <%= enterprise.display_name %>
+  </a>
+<% end %>
+</div>
+<% end %>

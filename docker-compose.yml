@@ -14,6 +14,9 @@ services:
       - POSTGRES_USER=pguser
       - POSTGRES_PASSWORD=pgpassword
       - POSTGRES_DB=pguser
+      - GOOGLE_CLIENT_ID
+      - GOOGLE_CLIENT_SECRET
+      - SERVICE_ACCOUNT_CREDENTIAL_JSON
     tty: true
     stdin_open: true
     ports:

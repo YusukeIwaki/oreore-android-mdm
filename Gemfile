@@ -11,6 +11,11 @@ gem 'sinatra-activerecord'
 gem 'tilt-jbuilder'
 gem 'zeitwerk'
 
+gem 'googleauth'
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+gem 'relax2'
+
 group :development do
   gem 'pry-byebug'
   gem 'rubocop'

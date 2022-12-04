@@ -1,0 +1,17 @@
+<form action='<%= @form_url %>' method='post'>
+<div class="mb-3">
+  <label for="inputIdentifier" class="form-label">identifier</label>
+  <input type="text" class="form-control" id="inputIdentifier" name="identifier" value="<%= @identifier %>">
+</div>
+<div class="mb-3">
+  <label for="inputPayload" class="form-label">payload</label>
+  <textarea class="form-control" id="inputPayload" name="json" rows="20"><%= @payload %></textarea>
+</div>
+<button type="submit" class="btn btn-primary mb-3">SUBMIT</button>
+</form>
+
+<% if @identifier %>
+<hr/>
+
+<a href="<%= @identifier %>/qr">QRコードの作成</a>
+<% end %>
