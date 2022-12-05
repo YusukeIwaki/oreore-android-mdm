@@ -120,4 +120,13 @@ class Application < Sinatra::Base
     @policy_name = payload['name']
     erb :'qrcode.html'
   end
+
+  get '/enterprises/:enterprise_name/devices/:identifier' do
+    login_required
+    enterprise_required
+
+    name = "enterprises/#{current_enterprise.name}/devices/#{params[:identifier]}"
+    @device = AndroidManagementApi.call("GET /#{name}")
+    erb :'device_show.html'
+  end
 end
