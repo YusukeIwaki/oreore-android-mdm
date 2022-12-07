@@ -10,3 +10,6 @@ default: &default
 
 development:
   <<: *default
+
+production:
+  url: <%= ENV["DATABASE_URL"] %>

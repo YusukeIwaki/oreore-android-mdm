@@ -161,6 +161,7 @@ DEPENDENCIES
   omniauth
   omniauth-google-oauth2
   pg
+  pry
   pry-byebug
   puma
   rack
