@@ -15,7 +15,7 @@ gem 'zeitwerk'
 gem 'googleauth'
 gem 'omniauth'
 gem 'omniauth-google-oauth2'
-gem 'relax2'
+gem 'relax2', require: false
 
 group :development do
   gem 'pry-byebug'
