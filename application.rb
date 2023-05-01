@@ -127,6 +127,29 @@ class Application < Sinatra::Base
 
     name = "enterprises/#{current_enterprise.name}/devices/#{params[:identifier]}"
     @device = AndroidManagementApi.call("GET /#{name}")
+    @device_show_policy_url = "/enterprises/#{current_enterprise.name}/devices/#{params[:identifier]}/policy"
     erb :'device_show.html'
+  end
+
+  get '/enterprises/:enterprise_name/devices/:identifier/policy' do
+    login_required
+    enterprise_required
+
+    name = "enterprises/#{current_enterprise.name}/devices/#{params[:identifier]}"
+    @device = AndroidManagementApi.call("GET /#{name}")
+    @device_url = "/enterprises/#{current_enterprise.name}/devices/#{params[:identifier]}"
+    @policies = AndroidManagementApi.call("GET /enterprises/#{current_enterprise.name}/policies")
+
+    erb :'device_show_policy.html'
+  end
+
+  post '/enterprises/:enterprise_name/devices/:identifier/policy' do
+    login_required
+    enterprise_required
+
+    name = "enterprises/#{current_enterprise.name}/devices/#{params[:identifier]}"
+    payload = { 'policyName' => params[:policy_name] }
+    AndroidManagementApi.call("PATCH /#{name}?updateMask=policyName", payload: payload)
+    redirect "/enterprises/#{current_enterprise.name}/devices/#{params[:identifier]}"
   end
 end

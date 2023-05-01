@@ -1,0 +1,17 @@
+<h2>設定されているポリシー</h2>
+<%= @device['policyName'].split("/").last %>
+
+<h2>実際にデバイスに適用されているポリシー</h2>
+<%= @device['appliedPolicyName'].split("/").last %> (最終更新日時: <%= @device['lastPolicySyncTime'] %>)
+
+<h2>ポリシーの変更</h2>
+クリックしたら即反映されます。
+<form class="list-group" method="post">
+<% AndroidManagementApi.call("GET /enterprises/#{current_enterprise.name}/policies")['policies']&.each do |policy| %>
+  <button name="policy_name" value="<%= policy['name'] %>" class="list-group-item list-group-item-action"><%= policy['name'].split("/").last %></button>
+<% end %>
+</form>
+
+<hr>
+
+<a href="<%= @device_url %>">デバイス詳細へ戻る</a>
