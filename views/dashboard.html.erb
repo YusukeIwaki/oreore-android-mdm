@@ -13,7 +13,12 @@
 <h2>デバイス</h2>
 <div class="list-group">
 <% devices.each do |device| %>
-  <a href="/<%= device['name'] %>" class="list-group-item list-group-item-action"><%= device['name'].split('/').last %></a>
+  <a href="/<%= device['name'] %>" class="list-group-item list-group-item-action">
+  <%= device['name'].split('/').last %>
+  <% if device['hardwareInfo'].present? %>
+  <pre><%= JSON.pretty_generate(device['hardwareInfo']) %></pre>
+  <% end %>
+  </a>
 <% end %>
 </div>
 <% end %>
