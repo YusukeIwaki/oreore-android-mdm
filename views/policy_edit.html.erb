@@ -5,7 +5,7 @@
 </div>
 <div class="mb-3">
   <label for="inputPayload" class="form-label">payload</label>
-  <textarea class="form-control" id="inputPayload" name="json" rows="20"><%= @payload %></textarea>
+  <textarea class="form-control" id="inputPayload" name="json" rows="20"><%= JSON.pretty_generate(@payload) %></textarea>
 </div>
 <button type="submit" class="btn btn-primary mb-3">SUBMIT</button>
 </form>

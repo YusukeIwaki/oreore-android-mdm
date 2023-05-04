@@ -79,13 +79,37 @@ class Application < Sinatra::Base
     erb :'dashboard.html'
   end
 
+  get '/enterprises/:enterprise_name/applications' do
+    login_required
+    enterprise_required
+
+    payload = AndroidManagementApi.call("POST /enterprises/#{current_enterprise.name}/webTokens", payload: {
+      parentFrameUrl: request.url,
+      enabledFeatures: ["PLAY_SEARCH", "PRIVATE_APPS", "WEB_APPS"],
+    })
+    @web_token = payload['value']
+
+    erb :'application_select.html'
+  end
+
+  get '/enterprises/:enterprise_name/applications/:package_name' do
+    login_required
+    enterprise_required
+
+    payload = AndroidManagementApi.call("GET /enterprises/#{current_enterprise.name}/applications/#{params[:package_name]}")
+    payload.delete('name')
+    @payload = payload
+
+    erb :'application_show.html'
+  end
+
   get '/enterprises/:enterprise_name/policies/new' do
     login_required
     enterprise_required
 
     @form_url = "/enterprises/#{current_enterprise.name}/policies"
     @identifier = ''
-    @payload = ''
+    @payload = {}
     erb :'policy_edit.html'
   end
 
@@ -95,9 +119,8 @@ class Application < Sinatra::Base
 
     @form_url = "/enterprises/#{current_enterprise.name}/policies"
     @identifier = params[:identifier]
-    payload = AndroidManagementApi.call("GET #{@form_url}/#{@identifier}")
-    payload.delete('name')
-    @payload = JSON.pretty_generate(payload)
+    @payload = AndroidManagementApi.call("GET #{@form_url}/#{@identifier}")
+    @payload.delete('name')
     erb :'policy_edit.html'
   end
 
