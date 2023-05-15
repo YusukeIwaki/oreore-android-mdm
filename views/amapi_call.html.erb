@@ -1,0 +1,58 @@
+<form method="POST">
+  <div class="mb-3">
+    <label for="input_http_method" class="form-label">HTTP method</label>
+    <select name="http_method" class="form-select">
+      <option value="GET" <% unless %w[POST PATCH DELETE].include?(params[:http_method]) %>selected<% end %>>GET</option>
+      <option value="POST" <% if params[:http_method] == 'POST' %>selected<% end %>>POST</option>
+      <option value="PATCH" <% if params[:http_method] == 'PATCH' %>selected<% end %>>PATCH</option>
+      <option value="DELETE" <% if params[:http_method] == 'DELETE' %>selected<% end %>>DELETE</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="input_url" class="form-label">path</label>
+    <input
+      id="input_path"
+      type="text"
+      class="form-control"
+      name="path"
+      value="<%= params[:path].presence || "/enterprises/#{current_enterprise.name}" %>" />
+  </div>
+  <div class="mb-3">
+    <label for="input_body" class="form-label">Body (only for POST, PATCH request)</label>
+    <textarea
+      id="input_body"
+      class="form-control"
+      name="body"
+      rows="5"><%= params[:body]&.strip %></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<% if params[:http_method].present? && params[:path].present? %>
+<hr />
+
+<% if params[:http_method] == 'GET' %>
+<%
+  query = {
+    http_method: params[:http_method],
+    path: params[:path],
+  }
+  uri = URI(request.base_url)
+  uri.path = "/enterprises/#{current_enterprise.name}/call"
+  uri.query = URI.encode_www_form(query)
+  url_for_share = uri.to_s
+%>
+  URL for share: <a href="<%= url_for_share %>"><%= url_for_share %></a>
+<hr />
+<% end %>
+
+<% if %w[GET DELETE].include?(params[:http_method]) %>
+<pre><%=
+JSON.pretty_generate(AndroidManagementApi.call("#{params[:http_method]} #{params[:path]}"))
+%></pre>
+<% else %>
+<pre><%=
+JSON.pretty_generate(AndroidManagementApi.call("#{params[:http_method]} #{params[:path]}", payload: JSON.parse(params[:body])))
+%></pre>
+<% end %>
+<% end %>

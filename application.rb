@@ -79,6 +79,20 @@ class Application < Sinatra::Base
     erb :'dashboard.html'
   end
 
+  get '/enterprises/:enterprise_name/call' do
+    login_required
+    enterprise_required
+
+    erb :'amapi_call.html'
+  end
+
+  post '/enterprises/:enterprise_name/call' do
+    login_required
+    enterprise_required
+
+    erb :'amapi_call.html'
+  end
+
   get '/enterprises/:enterprise_name/applications' do
     login_required
     enterprise_required
