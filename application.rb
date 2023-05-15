@@ -25,6 +25,7 @@ class Application < Sinatra::Base
 
     def login_required
       unless logged_in?
+        session[:return_to] = request.fullpath
         redirect '/auth/google_oauth2'
       end
     end
@@ -59,6 +60,15 @@ class Application < Sinatra::Base
   end
 
   get '/auth/google_oauth2/callback' do
+    url = session.delete(:return_to)
+    return_url =
+      if url.blank? || url.include?('/auth/')
+        '/'
+      else
+        url
+      end
+
+
     auth_hash = env["omniauth.auth"]
     if auth_hash.dig('info', 'email_verified')
       google_account = GoogleAccount.find_or_initialize_by(
@@ -68,7 +78,7 @@ class Application < Sinatra::Base
         email: auth_hash.dig('info', 'email')
       )
       session[:google_account_id] = google_account.id
-      redirect '/'
+      redirect return_url
     end
   end
 
