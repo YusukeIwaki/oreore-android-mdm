@@ -2,13 +2,11 @@
 
 source 'https://rubygems.org'
 
-gem 'pg'
+gem 'data_class_factory'
 gem 'pry'
 gem 'puma'
 gem 'rack'
-gem 'ridgepole'
 gem 'sinatra', require: false
-gem 'sinatra-activerecord'
 gem 'tilt-jbuilder'
 gem 'zeitwerk'
 

@@ -7,11 +7,6 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.1, >= 1.2.0)
-    activemodel (7.0.4)
-      activesupport (= 7.0.4)
-    activerecord (7.0.4)
-      activemodel (= 7.0.4)
-      activesupport (= 7.0.4)
     activesupport (7.0.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
@@ -25,7 +20,7 @@ GEM
     coderay (1.1.3)
     concurrent-ruby (1.1.10)
     crass (1.0.6)
-    diffy (3.4.2)
+    data_class_factory (1.0.0)
     erubi (1.11.0)
     faraday (2.7.1)
       faraday-net_http (>= 2.0, < 3.1)
@@ -86,7 +81,6 @@ GEM
     parallel (1.22.1)
     parser (3.1.3.0)
       ast (~> 2.4.1)
-    pg (1.4.5)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -109,9 +103,6 @@ GEM
     regexp_parser (2.6.1)
     relax2 (0.1.1)
     rexml (3.2.5)
-    ridgepole (1.2.0)
-      activerecord (>= 5.1, < 7.1)
-      diffy
     rubocop (1.39.0)
       json (~> 2.3)
       parallel (~> 1.10)
@@ -136,9 +127,6 @@ GEM
       rack (~> 2.2, >= 2.2.4)
       rack-protection (= 3.0.4)
       tilt (~> 2.0)
-    sinatra-activerecord (2.0.26)
-      activerecord (>= 4.1)
-      sinatra (>= 1.0)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
@@ -157,19 +145,17 @@ PLATFORMS
   x86_64-darwin-22
 
 DEPENDENCIES
+  data_class_factory
   googleauth
   omniauth
   omniauth-google-oauth2
-  pg
   pry
   pry-byebug
   puma
   rack
   relax2
-  ridgepole
   rubocop
   sinatra
-  sinatra-activerecord
   tilt-jbuilder
   zeitwerk
 

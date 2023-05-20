@@ -4,8 +4,8 @@
 <% else %>
 <div class="list-group">
 <% @enterprises.each do |enterprise| %>
-  <a href="/enterprises/<%= enterprise.name %>" class="list-group-item list-group-item-action">
-    <%= enterprise.display_name %>
+  <a href="/<%= enterprise['name'] %>" class="list-group-item list-group-item-action">
+    <%= enterprise['enterpriseDisplayName'] %>
   </a>
 <% end %>
 </div>

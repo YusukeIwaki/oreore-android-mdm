@@ -1,18 +1,18 @@
 <h1>DASHBOARD</h1>
-<p><%= current_enterprise.display_name %>の管理ページです。</p>
+<p><%= @enterprise['enterpriseDisplayName'] %>の管理ページです。</p>
 
 <h2>ポリシー</h2>
 <div class="list-group">
-<% AndroidManagementApi.call("GET /enterprises/#{current_enterprise.name}/policies")['policies']&.each do |policy| %>
+<% @policies.each do |policy| %>
   <a href="/<%= policy['name'] %>" class="list-group-item list-group-item-action"><%= policy['name'].split("/").last %></a>
 <% end %>
-<a href="/enterprises/<%= current_enterprise.name %>/policies/new" class="list-group-item list-group-item-action">新規作成</a>
+<a href="/enterprises/<%= params[:enterprise_name] %>/policies/new" class="list-group-item list-group-item-action">新規作成</a>
 </div>
 
-<% if (devices = AndroidManagementApi.call("GET /enterprises/#{current_enterprise.name}/devices")['devices']).present? %>
+<% if @devices.present? %>
 <h2>デバイス</h2>
 <div class="list-group">
-<% devices.each do |device| %>
+<% @devices.each do |device| %>
   <a href="/<%= device['name'] %>" class="list-group-item list-group-item-action">
   <%= device['name'].split('/').last %>
   <% if device['hardwareInfo'].present? %>

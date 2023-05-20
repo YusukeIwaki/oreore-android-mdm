@@ -22,7 +22,7 @@
     iframe.register('onproductselect', function(event) {
       const { packageName } = event
       if (!!packageName) {
-        window.location.href = `/enterprises/<%= current_enterprise.name %>/applications/${packageName}`
+        window.location.href = `/enterprises/<%= params[:enterprise_name] %>/applications/${packageName}`
       }
     }, gapi.iframes.CROSS_ORIGIN_IFRAMES_FILTER);
   });

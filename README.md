@@ -19,10 +19,8 @@
 => {"name"=>"enterprises/LC01abcdefg", "enterpriseDisplayName"=>"いわきゆうすけInc"}
 ```
 
-その結果をローカルの Enterprise に。AdminUser で GoogleAccount と紐付け。
+ある Google アカウントのユーザがどの組織を管理できるか、の内容は `ADMIN_USERS` 環境変数に保持する。
 
 ```
-[1] pry(main)> admin_google_account = GoogleAccount.find_by(email: .....)
-[2] pry(main)> enterprise = Enterprise.create!(name: 'LC01abcdefg', display_name: 'いわきゆうすけInc')
-[3] pry(main)> AdminUser.create!(google_account: admin_google_account, enterprise: enterprise)
+export ADMIN_USERS=uid1:LC01abcdefg,BBBBNNNN;uid2:LC01abcdefg,CCCCYYYY
 ```

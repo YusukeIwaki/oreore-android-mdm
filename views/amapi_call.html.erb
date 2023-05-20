@@ -15,7 +15,7 @@
       type="text"
       class="form-control"
       name="path"
-      value="<%= params[:path].presence || "/enterprises/#{current_enterprise.name}" %>" />
+      value="<%= params[:path].presence || "/enterprises/#{params[:enterprise_name]}" %>" />
   </div>
   <div class="mb-3">
     <label for="input_body" class="form-label">Body (only for POST, PATCH request)</label>
@@ -38,7 +38,7 @@
     path: params[:path],
   }
   uri = URI(request.base_url)
-  uri.path = "/enterprises/#{current_enterprise.name}/call"
+  uri.path = "/enterprises/#{params[:enterprise_name]}/call"
   uri.query = URI.encode_www_form(query)
   url_for_share = uri.to_s
 %>

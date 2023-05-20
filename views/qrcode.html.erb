@@ -6,7 +6,7 @@
     'policyName' => @policy_name,
     'allowPersonalUsage' => allow_personal_usage_value,
   }
-  enrollment_token = AndroidManagementApi.call("POST /enterprises/#{current_enterprise.name}/enrollmentTokens", payload: payload)
+  enrollment_token = AndroidManagementApi.call("POST /enterprises/#{params[:enterprise_name]}/enrollmentTokens", payload: payload)
   chart_uri = URI('https://chart.googleapis.com/chart')
   chart_uri.query = URI.encode_www_form({
     cht: 'qr',

@@ -7,8 +7,6 @@ services:
       - .:/app
       - bundle-data:/usr/local/bundle
     working_dir: /app
-    depends_on:
-      - postgres
     environment:
       - POSTGRES_HOST=postgres
       - POSTGRES_USER=pguser
@@ -21,16 +19,6 @@ services:
     stdin_open: true
     ports:
       - 3000:3000
-
-  postgres:
-    image: postgres:14-alpine
-    restart: always
-    volumes:
-      - pg-data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: pguser
-      POSTGRES_PASSWORD: pgpassword
-      POSTGRES_DB: pguser
 
 volumes:
   bundle-data:
