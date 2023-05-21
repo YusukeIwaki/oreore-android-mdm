@@ -193,4 +193,18 @@ class Application < Sinatra::Base
     AndroidManagementApi.call("PATCH /#{name}?updateMask=policyName", payload: payload)
     redirect "/enterprises/#{params[:enterprise_name]}/devices/#{params[:identifier]}"
   end
+
+  post '/pubsub' do
+    payload = JSON.parse(request.body.read)
+    data_b64 = payload['message']&.delete('data')
+    data_str = Base64.decode64(data_b64)
+    data = JSON.parse(data_str) rescue data_str
+
+    puts({
+      metadata: payload,
+      data: data,
+    })
+  rescue => err
+    puts "ERROR: #{err}"
+  end
 end
