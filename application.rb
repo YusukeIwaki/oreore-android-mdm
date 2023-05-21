@@ -19,7 +19,7 @@ class Application < Sinatra::Base
 
   helpers do
     def logged_in?
-      session[:email].present?
+      session[:uid].present?
     end
 
     def login_required
@@ -28,11 +28,22 @@ class Application < Sinatra::Base
         redirect '/auth/google_oauth2'
       end
     end
+
+    def current_user_accessible?(param_enterprise_name)
+      AdminUser.contains?(session[:uid], param_enterprise_name)
+    end
+
+    def check_enterprise_name_param
+      unless current_user_accessible?(params[:enterprise_name])
+        halt 403, "No permission to access #{params[:enterprise_name]}"
+      end
+    end
   end
 
   get '/' do
     if logged_in?
       @enterprises = AndroidManagementApi.call('GET /enterprises?projectId={project_id}')['enterprises'] || []
+      @enterprises.select! { |enterprise| current_user_accessible?(enterprise['name'].split('/').last) }
       erb :'select_enterprise.html'
     else
       erb :'login.html'
@@ -51,9 +62,9 @@ class Application < Sinatra::Base
 
     auth_hash = env["omniauth.auth"]
     if auth_hash.dig('info', 'email_verified')
-      email = auth_hash.dig('info', 'email')
-      if auth_hash['uid'].present? && AdminUser.for_user(auth_hash['uid']).present?
-        session[:email] = email
+      uid = auth_hash['uid']
+      if uid.present? && AdminUser.for_user(uid).present?
+        session[:uid] = uid
         redirect return_url
       else
         puts "auth_hash=#{auth_hash.to_h}"
@@ -64,6 +75,7 @@ class Application < Sinatra::Base
 
   get '/enterprises/:enterprise_name' do
     login_required
+    check_enterprise_name_param
 
     @enterprise = AndroidManagementApi.call("GET /enterprises/#{params[:enterprise_name]}")
     @policies = AndroidManagementApi.call("GET /enterprises/#{params[:enterprise_name]}/policies")['policies'] || []
@@ -73,6 +85,7 @@ class Application < Sinatra::Base
 
   get '/enterprises/:enterprise_name/call' do
     login_required
+    check_enterprise_name_param
 
     erb :'amapi_call.html'
   end
@@ -85,6 +98,7 @@ class Application < Sinatra::Base
 
   get '/enterprises/:enterprise_name/applications' do
     login_required
+    check_enterprise_name_param
 
     payload = AndroidManagementApi.call("POST /enterprises/#{params[:enterprise_name]}/webTokens", payload: {
       parentFrameUrl: request.url,
@@ -97,6 +111,7 @@ class Application < Sinatra::Base
 
   get '/enterprises/:enterprise_name/applications/:package_name' do
     login_required
+    check_enterprise_name_param
 
     payload = AndroidManagementApi.call("GET /enterprises/#{params[:enterprise_name]}/applications/#{params[:package_name]}")
     payload.delete('name')
@@ -107,6 +122,7 @@ class Application < Sinatra::Base
 
   get '/enterprises/:enterprise_name/policies/new' do
     login_required
+    check_enterprise_name_param
 
     @form_url = "/enterprises/#{params[:enterprise_name]}/policies"
     @identifier = ''
@@ -116,6 +132,7 @@ class Application < Sinatra::Base
 
   get '/enterprises/:enterprise_name/policies/:identifier' do
     login_required
+    check_enterprise_name_param
 
     @form_url = "/enterprises/#{params[:enterprise_name]}/policies"
     @identifier = params[:identifier]
@@ -126,6 +143,7 @@ class Application < Sinatra::Base
 
   post '/enterprises/:enterprise_name/policies' do
     login_required
+    check_enterprise_name_param
 
     AndroidManagementApi.call "PATCH /enterprises/#{params[:enterprise_name]}/policies/#{params[:identifier]}",
       payload: JSON.parse(params[:json])
@@ -135,6 +153,7 @@ class Application < Sinatra::Base
 
   get '/enterprises/:enterprise_name/policies/:identifier/qr' do
     login_required
+    check_enterprise_name_param
 
     policy_name = "enterprises/#{params[:enterprise_name]}/policies/#{params[:identifier]}"
     payload = AndroidManagementApi.call("GET /#{policy_name}")
@@ -145,6 +164,7 @@ class Application < Sinatra::Base
 
   get '/enterprises/:enterprise_name/devices/:identifier' do
     login_required
+    check_enterprise_name_param
 
     name = "enterprises/#{params[:enterprise_name]}/devices/#{params[:identifier]}"
     @device = AndroidManagementApi.call("GET /#{name}")
@@ -154,6 +174,7 @@ class Application < Sinatra::Base
 
   get '/enterprises/:enterprise_name/devices/:identifier/policy' do
     login_required
+    check_enterprise_name_param
 
     name = "enterprises/#{params[:enterprise_name]}/devices/#{params[:identifier]}"
     @device = AndroidManagementApi.call("GET /#{name}")
@@ -165,6 +186,7 @@ class Application < Sinatra::Base
 
   post '/enterprises/:enterprise_name/devices/:identifier/policy' do
     login_required
+    check_enterprise_name_param
 
     name = "enterprises/#{params[:enterprise_name]}/devices/#{params[:identifier]}"
     payload = { 'policyName' => params[:policy_name] }
