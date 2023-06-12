@@ -6,6 +6,7 @@ gem 'data_class_factory'
 gem 'pry'
 gem 'puma'
 gem 'rack'
+gem 'rack-contrib'
 gem 'sinatra', require: false
 gem 'tilt-jbuilder'
 gem 'zeitwerk'

@@ -4,6 +4,7 @@ require 'bundler'
 Bundler.require :default, (ENV['RACK_ENV'] || :development).to_sym
 
 require_relative './config/zeitwerk'
+require 'rack/contrib'
 require 'sinatra/base'
 require 'sinatra/jbuilder'
 
@@ -16,6 +17,7 @@ class Application < Sinatra::Base
   use OmniAuth::Builder do
     provider :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET']
   end
+  use Rack::JSONBodyParser, verbs: ['POST', 'PATCH', 'PUT']
 
   helpers do
     def logged_in?
@@ -37,6 +39,14 @@ class Application < Sinatra::Base
       unless current_user_accessible?(params[:enterprise_name])
         halt 403, "No permission to access #{params[:enterprise_name]}"
       end
+    end
+
+    def api_authorized?
+      request.env['HTTP_AUTHORIZATION'] == "Bearer #{ENV['OREORE_API_KEY']}"
+    end
+
+    def api_authorization_required
+      halt 403, "Access Forbidden" unless api_authorized?
     end
   end
 
@@ -206,5 +216,30 @@ class Application < Sinatra::Base
     })
   rescue => err
     puts "ERROR: #{err}"
+  end
+
+  get '/api/enterprises/:enterprise_name/devices/:identifier/policy' do
+    api_authorization_required
+
+    name = "enterprises/#{params[:enterprise_name]}/devices/#{params[:identifier]}"
+    @device = AndroidManagementApi.call("GET /#{name}")
+    @policies = AndroidManagementApi.call("GET /enterprises/#{params[:enterprise_name]}/policies")['policies'] || []
+
+    jbuilder :'device_show_policy.json'
+  end
+
+  patch '/api/enterprises/:enterprise_name/devices/:identifier/policy' do
+    api_authorization_required
+    policy_name = params.dig(:policy, :name)
+    unless policy_name
+      halt 400, "policy.name is required"
+    end
+
+    name = "enterprises/#{params[:enterprise_name]}/devices/#{params[:identifier]}"
+    payload = { 'policyName' => policy_name }
+    AndroidManagementApi.call("PATCH /#{name}?updateMask=policyName", payload: payload)
+    @device = AndroidManagementApi.call("GET /#{name}")
+
+    jbuilder :'device_show_policy.json'
   end
 end

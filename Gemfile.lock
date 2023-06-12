@@ -92,6 +92,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.6.0)
     rack (2.2.4)
+    rack-contrib (2.3.0)
+      rack (~> 2.0)
     rack-protection (3.0.4)
       rack
     rails-dom-testing (2.0.3)
@@ -153,6 +155,7 @@ DEPENDENCIES
   pry-byebug
   puma
   rack
+  rack-contrib
   relax2
   rubocop
   sinatra
