@@ -17,6 +17,7 @@ GEM
     ast (2.4.2)
     builder (3.2.4)
     byebug (11.1.3)
+    chunky_png (1.4.0)
     coderay (1.1.3)
     concurrent-ruby (1.1.10)
     crass (1.0.6)
@@ -52,7 +53,7 @@ GEM
     multi_xml (0.6.0)
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
-    nio4r (2.5.8)
+    nio4r (2.7.3)
     nokogiri (1.13.9)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
@@ -105,6 +106,10 @@ GEM
     regexp_parser (2.6.1)
     relax2 (0.1.1)
     rexml (3.2.5)
+    rqrcode (2.2.0)
+      chunky_png (~> 1.0)
+      rqrcode_core (~> 1.0)
+    rqrcode_core (1.2.0)
     rubocop (1.39.0)
       json (~> 2.3)
       parallel (~> 1.10)
@@ -157,6 +162,7 @@ DEPENDENCIES
   rack
   rack-contrib
   relax2
+  rqrcode
   rubocop
   sinatra
   tilt-jbuilder

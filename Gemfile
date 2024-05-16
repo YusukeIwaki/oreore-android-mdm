@@ -7,6 +7,7 @@ gem 'pry'
 gem 'puma'
 gem 'rack'
 gem 'rack-contrib'
+gem 'rqrcode'
 gem 'sinatra', require: false
 gem 'tilt-jbuilder'
 gem 'zeitwerk'
