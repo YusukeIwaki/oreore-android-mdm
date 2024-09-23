@@ -88,8 +88,8 @@ class Application < Sinatra::Base
     check_enterprise_name_param
 
     @enterprise = AndroidManagementApi.call("GET /enterprises/#{params[:enterprise_name]}")
-    @policies = AndroidManagementApi.call("GET /enterprises/#{params[:enterprise_name]}/policies")['policies'] || []
-    @devices = AndroidManagementApi.call("GET /enterprises/#{params[:enterprise_name]}/devices")['devices'] || []
+    @policies = AndroidManagementApi.call("GET /enterprises/#{params[:enterprise_name]}/policies?pageSize=100")['policies'] || []
+    @devices = AndroidManagementApi.call("GET /enterprises/#{params[:enterprise_name]}/devices?pageSize=100")['devices'] || []
     erb :'dashboard.html'
   end
 
